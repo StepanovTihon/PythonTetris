@@ -1,20 +1,47 @@
-import pygame, sys
-from pygame.locals import *
-pygame.init()
-screen = pygame.display.set_mode((400,100),0,32)
-pygame.display.set_caption("My First PyGame Windows");
-helloText = "Hello, World"
-(x,y,fontSize) = (10,40,40)
-myFont = pygame.font.SysFont("None", fontSize)
-fontColor = (255,255,0)
-bgColor = (255,255,255)
-fontImage = myFont.render(helloText, 0, (fontColor))
-mainLoop = True
-while mainLoop:
- for event in pygame.event.get():
-  if event.type == QUIT:
-   mainLoop = False
- screen.fill(bgColor)
- screen.blit(fontImage,(x,y))
- pygame.display.update()
-pygame.quit()
+from FigClass import *
+from GameZone import *
+from Pygame import *
+import time as tm
+Fig = FigClass()
+Gamezone = GameZoneClass()
+GameScreen = GameScreenClass()
+GameScreen.DrawGrid()
+GameScreen.Update()
+t=0.8
+
+
+while True:
+    GameScreen.demon()
+    Gamezone.Set(Fig.Xpos(),Fig.Ypos(),Fig.GetFig(), 1, Fig.FigColor())
+    GameScreen.Write(Gamezone.GetGameZone(), Gamezone.GetZoneColor())
+    GameScreen.Update()
+    print(Gamezone.GetZoneColor())
+    GameScreen.Clear()
+    Gamezone.Set(Fig.Xpos(),Fig.Ypos(),Fig.GetFig(),-1, Fig.FigColor())
+    if(GameScreen.N()):
+        t=0.1
+    else:
+        t=0.8    
+    if(GameScreen.L()==True and Gamezone.CheckPaste(Fig.Xpos()-1,Fig.Ypos(),Fig.GetFig())):
+        Fig.Xpos(-1)
+    
+    if(GameScreen.R() and Gamezone.CheckPaste(Fig.Xpos()+1,Fig.Ypos(),Fig.GetFig())):
+        Fig.Xpos(1)
+    
+    if(GameScreen.Rot() and Gamezone.CheckTurn(Fig.Xpos(),Fig.Ypos(),Fig.GetFig())):
+        Fig.TurnFig()
+    time.sleep(t)
+    if(Gamezone.CheckPaste(Fig.Xpos(),Fig.Ypos()+1,Fig.GetFig())):
+      Fig.Ypos(1)
+    else:
+        Gamezone.Set(Fig.Xpos(),Fig.Ypos(),Fig.GetFig(),1, Fig.FigColor())
+        Fig = FigClass()
+    Gamezone.DelStrings()
+
+        
+
+    
+        
+
+
+
